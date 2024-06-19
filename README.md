@@ -8,3 +8,23 @@ Step 2
 The purpose of step 2 was to retrieve documents matching the input query. Mapper and reducer scripts were again employed, with inputs being the output of step 1 and the query text. The mapper script passed the input directly to the reducer. Inside the reducer, all input data, including idf, vocabulary, and tf/idf dictionaries, were accumulated. The query text was split based on white space, and the resulting words were used to calculate the tf/idf of the query text using the idf and vocabulary dictionaries created earlier. Finally, the inner product of the tf/idf of each document and the query tf/idf was calculated, with a higher inner product indicating greater similarity with the document.
 
 Through these two steps, we created the search application. For optimization purposes, rather than creating an array of the size of the vocabulary length for each document and leaving most indexes as zero, it is more efficient to use a dictionary to store words as keys and their tf/idf values. This reduces the array size and eliminates unnecessary zeros. For example, while testing with 10 documents, the length of an array for a document was around 18500. After successfully running on 10 documents, the program was tested on 5000 documents and then on the entire dataset without encountering any errors. The MapReduce jobs were successful throughout.
+
+to run this project :-
+first create a directory inside the hdfs. 
+by this command
+hadoop fs -mkdir /inputs/
+
+after doing this 
+upload the csv file to the hdfs 
+hadoop fs -put "path of file" /inputs/
+
+run the indexer by the following command
+hadoop jar /usr/local/hadoop-2.10.2/share/hadoop/tools/lib/hadoop-streaming-2.10.2.jar   -input /inputs/reduced_data.csv  -output /inputs/output1 -mapper mapper.py   -reducer reducer.py   -file /home/i221944/22i-1944/step1_mapper.py   -file /home/i221944/22i-1944/step_1reducer.py
+
+this will create an indexer output documnent which will be stored in the inputs/output1/part-00000
+
+now setup the flask application 
+
+i have given the linkes in it for the step_2 mapper and step_2 reducer, change them accordingly for the working of the application
+
+
